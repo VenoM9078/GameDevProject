@@ -10,6 +10,12 @@ public class PlayerController : MonoBehaviour
     public Rigidbody2D rb;
     public float jumpForce;
 
+    public bool isGrounded = false;
+    public bool canDoubleJump = false;
+
+    public Transform groundCheckPoint;
+    public LayerMask whatIsGround;
+
     void Start()
     {
          
@@ -20,10 +26,25 @@ public class PlayerController : MonoBehaviour
     {
         rb.velocity = new Vector2(moveSpeed * Input.GetAxisRaw("Horizontal"), rb.velocity.y);
 
+        isGrounded = Physics2D.OverlapCircle(groundCheckPoint.position, 1f, whatIsGround);
+
+        if(isGrounded == true)
+        {
+            canDoubleJump = true;
+        }
 
         if(Input.GetButtonDown("Jump"))
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            if (isGrounded) { 
+                rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            } else
+            {
+                if (canDoubleJump)
+                {
+                    rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+                    canDoubleJump = false;
+                }
+            }
         }
     }
 }
