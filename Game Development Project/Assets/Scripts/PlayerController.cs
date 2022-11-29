@@ -16,9 +16,13 @@ public class PlayerController : MonoBehaviour
     public Transform groundCheckPoint;
     public LayerMask whatIsGround;
 
+    private Animator animator;
+    private SpriteRenderer sr;
+
     void Start()
     {
-         
+         animator = GetComponent<Animator>();
+         sr = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
@@ -46,5 +50,18 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+
+        if(rb.velocity.x < 0)
+        {
+            sr.flipX = true;
+        } else if (rb.velocity.x > 0)
+        {
+            sr.flipX = false;
+        }
+
+        animator.SetFloat("moveSpeed", Mathf.Abs(rb.velocity.x));
+        animator.SetBool("isGrounded", isGrounded);
+
+
     }
 }
